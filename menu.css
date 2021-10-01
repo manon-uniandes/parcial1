@@ -12,7 +12,6 @@
     min-height: 100vh;
   }
 
-
 .cart {
     height: auto;
     width: auto;
@@ -37,9 +36,6 @@
     background-color: #000000 !important;
   }
   
-  .nav-link {
-    padding: 15px;
-  }
   
 
 
