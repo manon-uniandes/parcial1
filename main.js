@@ -2,12 +2,22 @@
 source =
   "https://gist.githubusercontent.com/josejbocanegra/9a28c356416badb8f9173daf36d1460b/raw/5ea84b9d43ff494fcbf5c5186544a18b42812f09/restaurant.json";
 let data;
+var order = new Map();
+let orderTotal = 0;
 
 fetch(source)
   .then((res) => res.json())
   .then((res) => {
     data = res;
     showDishes(0);
+    let cancelOrder = document.getElementById("cancelOrder");
+    cancelOrder.onclick = function () {
+      order = new Map();
+      orderTotal = 0;
+      let items = document.getElementById("itemsInCart");
+      items.innerText = "0 items";
+      showOrder();
+    };
   });
 
 // Function for the questions 1&2
@@ -15,6 +25,9 @@ fetch(source)
 function showDishes(index) {
   const div = document.getElementById("dishes");
   div.innerHTML = "";
+
+  const div2 = document.getElementById("order");
+  div2.innerHTML = "";
 
   let pageTitle = document.createElement("div");
   pageTitle.className = "text-center";
@@ -82,7 +95,7 @@ function showDishes(index) {
     var btn = this;
     btn.addEventListener("click", function (event) {
       event.preventDefault();
-      let numberOfItems = document.getElementById("items");
+      let numberOfItems = document.getElementById("itemsInCart");
       let text = numberOfItems.innerText;
       let num = parseInt(text.split(" "[0]));
       num += 1;
@@ -121,4 +134,90 @@ const drinks = document.getElementById("4");
 drinks.addEventListener("click", function (event) {
   event.preventDefault();
   showDishes(4);
+});
+
+
+
+function showOrder() {
+
+  const div = document.getElementById("order");
+  div.innerHTML = "";
+  const div2 = document.getElementById("dishes");
+  div2.innerHTML = "";
+
+  let pageTitle = document.createElement("div");
+  pageTitle.className = "text-center";
+  let name = document.createElement("h1");
+  name.innerText = "Order detail";
+  pageTitle.appendChild(name);
+  div.appendChild(pageTitle);
+
+  let separator = document.createElement("hr");
+  div.appendChild(separator);
+
+  let allOrders = document.createElement("table");
+  allOrders.className = "table table-striped";
+
+  let tableHead = document.createElement("thead");
+  let tableHeadRow = document.createElement("tr");
+  let headers = [
+    "No Item",
+    "Quantity",
+    "Description",
+    "Unit Price",
+    "Amount",
+    "Modify",
+  ];
+
+  for (header of headers) {
+    let tableHeader = document.createElement("th");
+    tableHeader.scope = "col";
+    tableHeader.innerText = header;
+    tableHeadRow.appendChild(tableHeader);
+  }
+  tableHead.appendChild(tableHeadRow);
+  allOrders.appendChild(tableHead);
+  
+  let tableBody = document.createElement("tbody");
+  
+  allOrders.appendChild(tableBody);
+  div.appendChild(allOrders);
+  
+  let checkoutSection = document.createElement("div");
+  checkoutSection.className = "row";
+  
+  let confirmChecking = document.createElement("span");
+  confirmChecking.className = "float-right";
+
+  let buttons = document.createElement("div");
+  buttons.className = "d-grid gap-2";
+
+  let cancelButton = document.createElement("button");
+  cancelButton.className = "btn btn-danger";
+  cancelButton.id = "cancelBtn";
+  cancelButton.style = "margin: 2px";
+  cancelButton.type = "button";
+  cancelButton.dataset.toggle = "modal";
+  cancelButton.dataset.target = "#cancelModal";
+  cancelButton.innerText = "Cancel";
+
+  let confirmButton = document.createElement("button");
+  confirmButton.className = "btn btn-success";
+  confirmButton.id = "SICAPITANESTAMOSLISTOS";
+  confirmButton.style = "margin: 2px";
+  confirmButton.type = "button";
+  confirmButton.innerText = "Confirm order";
+
+  buttons.appendChild(cancelButton);
+  buttons.appendChild(confirmButton);
+  confirmChecking.appendChild(buttons);
+  
+  checkoutSection.appendChild(confirmChecking);
+  div.appendChild(checkoutSection);
+}
+
+const cart = document.getElementById("itemsInCart");
+cart.addEventListener("click", function (event) {
+  event.preventDefault();
+  showOrder();
 });
